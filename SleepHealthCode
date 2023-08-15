@@ -1,0 +1,176 @@
+-- View entire dataset
+
+SELECT *
+FROM Sleep.Health
+
+-- Question 1: What is the average amount of sleep duration across all individuals? Does sleep duration correlate with age, gender, or occupation?
+-- Find the overall average sleep duration, also find the average sleep duration by age, gender, and occupation
+
+SELECT AVG(Sleep_Duration) AS Avg_sleep_duration 
+FROM Sleep.Health 
+
+-- Average sleep duration by age group
+
+SELECT 
+  CASE 
+    WHEN Age < 30 THEN '18-29'
+    WHEN Age < 40 THEN '30-39'
+    WHEN Age < 50 THEN '40-49'
+    WHEN Age >= 50 THEN '50+'
+  END AS age_group,
+  AVG(Sleep_Duration) AS avg_sleep_duration
+FROM Sleep.Health
+GROUP BY age_group
+ORDER BY age_group
+
+-- Average sleep duration by gender
+
+SELECT 
+  Gender,
+  AVG(Sleep_Duration) AS Avg_sleep_duration
+FROM Sleep.Health
+GROUP BY Gender
+
+-- Average sleep duration by occupation
+
+SELECT 
+  Occupation,
+  AVG(Sleep_Duration) AS avg_sleep_duration
+FROM Sleep.Health
+GROUP BY Occupation
+ORDER BY avg_sleep_duration DESC
+
+-- Correlation between age and sleep duration
+
+SELECT 
+  CORR(Age, Sleep_Duration) AS Correlation 
+FROM Sleep.Health
+
+-- Question 2: Which occupations have the highest/lowest average sleep quality ratings? Does occupation impact sleep quality?
+-- for each occupation, find the highest and lowest sleep quality ratings
+
+SELECT
+  Occupation,
+  AVG(Quality_of_Sleep) AS Avg_sleep_quality
+FROM Sleep.Health
+GROUP BY Occupation
+ORDER BY Avg_sleep_quality DESC
+
+
+-- Question 3: Is there a relationship between daily physical activity levels and sleep quality or duration?
+
+-- Average sleep duration by activity level
+
+SELECT
+  CASE 
+    WHEN Physical_Activity < 40 THEN 'Low' 
+    WHEN Physical_Activity < 60 THEN 'Moderate'
+    WHEN Physical_Activity >= 60 THEN 'High'
+  END AS Activity_level,
+  AVG(Sleep_Duration) AS Avg_sleep_duration
+FROM Sleep.Health
+GROUP BY Activity_level
+
+-- Average sleep quality by activity level
+
+SELECT
+  CASE
+    WHEN Physical_Activity < 40 THEN 'Low'
+    WHEN Physical_Activity < 60 THEN 'Moderate'  
+    WHEN Physical_Activity >= 60 THEN 'High'
+  END AS Activity_level,
+  AVG(Quality_of_Sleep) AS Avg_sleep_quality
+FROM Sleep.Health
+GROUP BY Activity_level
+
+-- Question 4: Do higher stress levels correlate with lower sleep duration or quality?
+
+SELECT
+  Stress_Level,
+  AVG(Sleep_Duration) AS Avg_sleep_duration,
+  AVG(Quality_of_Sleep) AS Avg_sleep_quality
+FROM Sleep.Health
+GROUP BY Stress_Level
+ORDER BY Stress_Level
+
+-- Question 5: What proportion of individuals fall into each BMI category? Is BMI related to sleep disorders?
+
+SELECT
+  BMI_Category,
+  COUNT(*) AS Num_people,
+  COUNT(CASE WHEN Sleep_Disorder = 'None' THEN 1 END) AS without_disorder,
+  COUNT(CASE WHEN Sleep_Disorder != 'None' THEN 1 END) AS with_disorder
+FROM Sleep.Health
+GROUP BY BMI_Category
+
+-- Question 6: What is the average resting heart rate and blood pressure among good sleepers vs poor sleepers? 
+
+SELECT
+  CASE 
+    WHEN Quality_of_Sleep > 7 THEN 'Good Sleeper'
+    ELSE 'Poor Sleeper' 
+  END AS sleep_quality,
+  AVG(Heart_Rate) AS avg_heart_rate,
+  AVG(CAST(SPLIT(Blood_Pressure, '/')[OFFSET(0)] AS INT64)) AS avg_systolic_bp,
+  AVG(CAST(SPLIT(Blood_Pressure, '/')[OFFSET(1)] AS INT64)) AS avg_diastolic_bp
+FROM Sleep.Health
+GROUP BY sleep_quality
+
+
+-- Question 7: Which age groups take the most vs least daily steps on average? Are daily steps associated with better sleep?
+
+SELECT
+  CASE 
+    WHEN Age < 30 THEN '18-29'
+    WHEN Age < 40 THEN '30-39'
+    WHEN Age < 50 THEN '40-49'
+    WHEN Age >= 50 THEN '50+'
+  END AS age_group,
+  AVG(Daily_Steps) AS Avg_steps,
+  AVG(Quality_of_Sleep) AS Avg_sleep_quality
+FROM Sleep.Health
+GROUP BY age_group
+ORDER BY Avg_steps DESC
+
+-- Question 8: Which disorders are most common?
+
+SELECT
+  SUM(CASE WHEN Sleep_Disorder = 'Insomnia' THEN 1 ELSE 0 END) AS Insomnia_count,
+  SUM(CASE WHEN Sleep_Disorder = 'Sleep Apnea' THEN 1 ELSE 0 END) AS Apnea_count,
+  COUNT(CASE WHEN Sleep_Disorder != 'None' THEN 1 END) AS No_disorder,
+  COUNT(*) AS total_count
+FROM Sleep.Health
+
+
+-- Question 9; Do certain occupations have higher rates of diagnosed sleep disorders?
+
+SELECT
+  Occupation,
+  COUNT(CASE WHEN Sleep_Disorder = 'Insomnia' THEN 1 END) AS insomnia_count,
+  COUNT(CASE WHEN Sleep_Disorder = 'Sleep Apnea' THEN 1 END) AS apnea_count,
+  COUNT(CASE WHEN Sleep_Disorder != 'None' THEN 1 END) AS any_disorder_count,
+  COUNT(*) AS total_count
+FROM Sleep.Health
+GROUP BY Occupation
+ORDER BY any_disorder_count DESC
+
+
+-- Question 10: Is there a gender difference in rates of insomnia vs sleep apnea diagnoses?
+
+SELECT
+  Gender,
+  COUNT(CASE WHEN Sleep_Disorder = 'Insomnia' THEN 1 END) AS insomnia_count, 
+  COUNT(CASE WHEN Sleep_Disorder = 'Sleep Apnea' THEN 1 END) AS apnea_count
+FROM Sleep.Health
+GROUP BY Gender
+
+-- Question 11: Compare sleep disorder status with lower sleep duration/quality and higher stress
+
+SELECT
+  CASE WHEN Sleep_Disorder = 'None' THEN 'No Disorder'
+       ELSE 'Sleep Disorder' END AS disorder_status,
+  AVG(Sleep_Duration) AS avg_sleep_duration,
+  AVG(Quality_of_Sleep) AS avg_sleep_quality,
+  AVG(Stress_Level) AS avg_stress_level
+FROM Sleep.Health
+GROUP BY disorder_status
