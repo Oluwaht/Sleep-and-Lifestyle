@@ -1,7 +1,8 @@
-Sleep Health Dataset
+# Sleep Health Dataset
+
 This dataset contains information on sleep patterns, lifestyle factors, and health measurements for 374 individuals. It can be used to analyze correlations between sleep, daily habits, cardiovascular health, and sleep disorders.
 
-Contents
+## Contents
 The dataset includes the following columns:
 
 ID: Unique identifier for each individual
