@@ -17,10 +17,14 @@ Blood_Pressure: Systolic/diastolic measurement
 Heart_Rate: Resting heart rate (bpm)
 Daily_Steps: Number of steps per day
 Sleep_Disorder: Indicates diagnosed sleep disorder (None, Insomnia, Sleep Apnea)
-
-
 Insights
-
-
-Acknowledgements
-
+Ages 18-29 have the lowest average sleep duration (6.468 hours), while ages 50+ have the highest average sleep duration (7.631 hours).
+Females on average sleep about 19 minutes longer than males.
+Engineers have on average the highest sleep duration (7.987 hours), while Sales Reps slept the least (5.9 hours).
+Higher levels of stress correlate with lower sleep quality and shorter sleep duration.
+Nurses have the highest prevalence of Sleep Apnea, while Salespeople have the highest insomnia prevalence.
+High activity levels show a positive relationship with longer sleep duration.
+As expected, individuals with no sleeping disorders have higher average sleep duration, higher average sleep quality, and lower average stress levels compared to those with disorders.
+Engineers have the best average sleep quality, while Sales Reps have the worst average sleep quality across occupations.
+Source
+Sleep Health and Lifestyle Dataset By LAKSIKA THARMALINGAM. Available on Kaggle: https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset
