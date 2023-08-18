@@ -17,11 +17,11 @@ SELECT
     WHEN Age < 40 THEN '30-39'
     WHEN Age < 50 THEN '40-49'
     WHEN Age >= 50 THEN '50+'
-  END AS age_group,
-  AVG(Sleep_Duration) AS avg_sleep_duration
+  END AS Age_group,
+  AVG(Sleep_Duration) AS Avg_sleep_duration
 FROM Sleep.Health
-GROUP BY age_group
-ORDER BY age_group
+GROUP BY Age_group
+ORDER BY Age_group
 
 -- Average sleep duration by gender
 
@@ -103,6 +103,9 @@ SELECT
 FROM Sleep.Health
 GROUP BY BMI_Category
 
+SELECT DISTINCT BMI_Category
+FROM Sleep.Health
+
 -- Question 6: What is the average resting heart rate and blood pressure among good sleepers vs poor sleepers? 
 
 SELECT
@@ -174,3 +177,5 @@ SELECT
   AVG(Stress_Level) AS avg_stress_level
 FROM Sleep.Health
 GROUP BY disorder_status
+
+
